@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "qa:audit": "node scripts/qa-audit.mjs"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com-personal:Esteban2002Dev/auto-qa.git"
