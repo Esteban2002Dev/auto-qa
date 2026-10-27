@@ -1,0 +1,2 @@
+import test from 'node:test'; import assert from 'node:assert/strict'; import { extractPullRequestUrls, parsePullRequestUrl } from '../../src/application/pull-request-url.js';
+test('extracts only complete GitHub pull request URLs without duplicates', () => { assert.deepEqual(extractPullRequestUrls('x https://github.com/acme/app/pull/12, x https://github.com/acme/app/pull/12 and github.com/a/b/pull/1'), ['https://github.com/acme/app/pull/12']); assert.deepEqual(parsePullRequestUrl('https://github.com/acme/app/pull/12'), { owner: 'acme', repo: 'app', number: 12 }); });
