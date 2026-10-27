@@ -1,0 +1,2 @@
+import { createQaOrchestrator } from '../../bootstrap/container.js'; import { issueKeyFromArgs, fail } from './common.js';
+try { const app = createQaOrchestrator(); const result = await app.audit(issueKeyFromArgs(), true); const paths = await app.save(result.report, result.markdown); console.log(`QA finalizado: ${result.report.status}\nReporte: ${paths.markdownPath}`); } catch (error) { fail(error); }

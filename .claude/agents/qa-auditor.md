@@ -1,4 +1,3 @@
-
 ---
 name: qa-auditor
 description: Audita cambios de software y genera planes de pruebas de QA basados en requisitos.
