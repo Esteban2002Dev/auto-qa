@@ -2,9 +2,14 @@
   "name": "auto-qa",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "qa:audit": "node scripts/qa-audit.mjs"
+    "typecheck": "tsc --noEmit",
+    "test:unit": "node --import tsx --test tests/unit/**/*.test.ts",
+    "test:e2e": "playwright test",
+    "qa:ticket": "tsx src/presentation/cli/qa-ticket.ts",
+    "qa:audit": "tsx src/presentation/cli/qa-audit.ts",
+    "qa:run": "tsx src/presentation/cli/qa-run.ts"
   },
   "repository": {
     "type": "git",
@@ -15,6 +20,11 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.64.1",
-    "@types/node": "^26.6.5"
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9"
   }
 }
