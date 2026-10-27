@@ -1,0 +1,30 @@
+name: QA Automation (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ticket_key:
+        description: Jira issue key to collect
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  collect-ticket:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - run: npm ci
+      - name: Collect Jira context
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_CLOUD_ID: ${{ secrets.JIRA_CLOUD_ID }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run qa:ticket -- "${{ inputs.ticket_key }}"
