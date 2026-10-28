@@ -1,6 +1,6 @@
 # Auto-QA
 
-See the [project context and architecture](docs/project-context.md), [commands guide](docs/use-comand.md), and [structured audit contract](docs/structured-audit-contract.md).
+See the [project context and architecture](docs/project-context.md), [commands guide](docs/use-comand.md), [structured audit contract](docs/structured-audit-contract.md), and [pull request detection guide](docs/pull-request-detection.md).
 
 Auto-QA is an internal framework for gathering ticket context, reviewing pull requests in read-only mode, requesting local Claude Code audits, and storing structured QA results.
 
