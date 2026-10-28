@@ -2,6 +2,8 @@
 
 See the [project context and architecture](docs/project-context.md), [commands guide](docs/use-comand.md), [structured audit contract](docs/structured-audit-contract.md), and [pull request detection guide](docs/pull-request-detection.md).
 
+Read the [environment configuration and credential migration guide](docs/environment-configuration.md) before configuring Jira or GitHub access.
+
 Auto-QA is an internal framework for gathering ticket context, reviewing pull requests in read-only mode, requesting local Claude Code audits, and storing structured QA results.
 
 ## Architecture
