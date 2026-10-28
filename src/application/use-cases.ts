@@ -1,11 +1,10 @@
 import type { IssueTrackerPort } from './ports.js';
 import type { TicketContext } from '../domain/entities.js';
-import { canonicalizePullRequestReferences, extractPullRequestReferences, repositoryAliasesFromEnv } from './pull-request-url.js';
+import { canonicalizePullRequestReferences, extractPullRequestReferences, type RepositoryAliases } from './pull-request-url.js';
 
-export async function collectTicketContext(issueKey: string, tracker: IssueTrackerPort): Promise<TicketContext> {
+export async function collectTicketContext(issueKey: string, tracker: IssueTrackerPort, aliases: RepositoryAliases = {}): Promise<TicketContext> {
   const issue = await tracker.getIssue(issueKey);
   const [comments, parent, developmentReferences] = await Promise.all([tracker.getComments(issue.key), tracker.getParentIssue(issue), tracker.getDevelopmentPullRequestReferences?.(issue).catch(() => []) ?? []]);
-  const aliases = repositoryAliasesFromEnv(process.env.GITHUB_REPOSITORY_ALIASES);
   const references = canonicalizePullRequestReferences([
     ...extractPullRequestReferences(issue.metadata.pullRequestFieldValue ?? '', 'JIRA_FIELD', issue.metadata.pullRequestFieldId ?? 'unknown', aliases),
     ...extractPullRequestReferences(issue.description, 'JIRA_DESCRIPTION', `issue:${issue.key}:description`, aliases),
