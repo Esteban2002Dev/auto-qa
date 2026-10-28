@@ -1,2 +1,2 @@
-import { createQaOrchestrator } from '../../bootstrap/container.js'; import { issueKeyFromArgs, fail } from './common.js';
-try { const app = createQaOrchestrator(); const result = await app.audit(issueKeyFromArgs()); const paths = await app.save(result.report, result.markdown); console.log(`Reporte generado: ${paths.markdownPath}\nDatos JSON: ${paths.jsonPath}`); } catch (error) { fail(error); }
+import { createQaOrchestrator } from '../../bootstrap/container.js'; import { issueKeyFromArgs, reportLanguageFromArgs, fail } from './common.js';
+try { const app = createQaOrchestrator(reportLanguageFromArgs()); const result = await app.audit(issueKeyFromArgs()); const paths = await app.save(result.report, result.markdown); console.log(`Report generated: ${paths.markdownPath}\nJSON data: ${paths.jsonPath}`); } catch (error) { fail(error); }

@@ -1,0 +1,5 @@
+import test from 'node:test'; import assert from 'node:assert/strict'; import { readEnv } from '../../src/infrastructure/config/env.js';
+const base = { JIRA_BASE_URL: 'https://example.atlassian.net', JIRA_CLOUD_ID: 'cloud', JIRA_AUTH_EMAIL: 'qa@example.com', JIRA_READ_API_TOKEN: 'read-token' };
+test('uses only read credentials and safe optional defaults', () => { const config = readEnv(base); assert.equal(config.jiraReadApiToken, 'read-token'); assert.equal(config.githubReadApiToken, undefined); assert.equal(config.jiraPublishApiToken, undefined); assert.equal(config.qaJiraPublishEnabled, false); assert.equal(config.qaJiraRequireApproval, true); });
+test('does not fall back from publishing credentials to read credentials', () => { const config = readEnv({ ...base, JIRA_PUBLISH_API_TOKEN: 'publish-token' }); assert.equal(config.jiraReadApiToken, 'read-token'); assert.equal(config.jiraPublishApiToken, 'publish-token'); });
+test('rejects missing read configuration without exposing values', () => { assert.throws(() => readEnv({ JIRA_BASE_URL: 'https://example.atlassian.net' }), /JIRA_CLOUD_ID, JIRA_AUTH_EMAIL, JIRA_READ_API_TOKEN/); });

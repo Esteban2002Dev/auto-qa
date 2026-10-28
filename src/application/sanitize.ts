@@ -1,0 +1,3 @@
+const secretPatterns = [/(?:api[_-]?key|token|password|secret)\s*[:=]\s*[^\s"']+/gi, /(?:ghp|github_pat|sk|xox[baprs])[_-][A-Za-z0-9_-]+/g];
+export function sanitizeText(value: string): string { return secretPatterns.reduce((sanitized, pattern) => sanitized.replace(pattern, '[REDACTED]'), value); }
+export function sanitizeData<T>(value: T): T { if (typeof value === 'string') return sanitizeText(value) as T; if (Array.isArray(value)) return value.map(sanitizeData) as T; if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([key, item]) => [key, sanitizeData(item)])) as T; return value; }

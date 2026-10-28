@@ -13,9 +13,13 @@ Available configuration:
 | --- | --- | --- |
 | `JIRA_BASE_URL` | Public URL of the Jira instance | Yes |
 | `JIRA_CLOUD_ID` | Jira Cloud identifier used by the Atlassian API | Yes |
-| `JIRA_EMAIL` | Authorized Jira technical account | Yes |
-| `JIRA_API_TOKEN` | Scoped Jira API token | Yes |
-| `GITHUB_TOKEN` | Private PR access and higher GitHub API limits | No |
+| `JIRA_AUTH_EMAIL` | Authorized Jira technical account | Yes |
+| `JIRA_READ_API_TOKEN` | Scoped read-only Jira API token | Yes |
+| `JIRA_PUBLISH_API_TOKEN` | Reserved token for future Jira publishing | No |
+| `QA_JIRA_PUBLISH_ENABLED` | Reserved publishing switch; must remain `false` | No, defaults to `false` |
+| `QA_JIRA_REQUIRE_APPROVAL` | Reserved approval requirement; defaults to `true` | No |
+| `GITHUB_READ_API_TOKEN` | Read-only private PR access and higher GitHub API limits | No |
+| `QA_REPORT_LANGUAGE` | Default report language: `es` or `en` | No, defaults to `es` |
 
 Never include credentials in commands, reports, source code, or versioned files.
 
@@ -55,6 +59,7 @@ Reads Jira and prints the normalized ticket, comments, parent relationship, and 
 
 ```bash
 npm run qa:audit -- AGSVK-123
+npm run qa:audit -- AGSVK-123 --lang=en
 ```
 
 Collects ticket context, attempts to read accessible pull requests, and invokes the local Claude Code agent for a static audit. It creates two files in `reports/`:
@@ -63,6 +68,17 @@ Collects ticket context, attempts to read accessible pull requests, and invokes 
 - `<ticket>-<executionId>.md`: a human-readable review report.
 
 If GitHub or Claude is unavailable, the report records the limitation as a finding or `BLOCKED` status; it does not simulate a complete audit.
+
+The report language is resolved in this order: `--lang` CLI argument, `QA_REPORT_LANGUAGE`, then Spanish (`es`). Both syntaxes are supported:
+
+```bash
+npm run qa:audit -- AGSVK-123 --lang=es
+npm run qa:audit -- AGSVK-123 --lang en
+```
+
+Reports include a `reportLanguage` field and a `pullRequests` inventory. Each resolved PR records its canonical URL, repository, number, retrieved SHA, and `REVIEWED`, `PARTIAL`, or `BLOCKED` review status. The Markdown report renders the inventory as clickable links.
+
+To add a future language, extend the lightweight dictionary in `src/application/report-markdown.ts` and the allowed values in `src/application/report-language.ts`; the domain contract remains unchanged.
 
 ## Run the Flow with Playwright
 
