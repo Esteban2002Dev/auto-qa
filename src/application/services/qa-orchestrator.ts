@@ -15,11 +15,13 @@ export class QaOrchestrator {
   async audit(issueKey: string, executeTests = false): Promise<{ report: QaReport; markdown: string }> {
     const stages = initialStages(); let context: TicketContext;
     try { context = await this.collect(issueKey); stages.COLLECT_CONTEXT = 'PASSED'; } catch (error) { stages.COLLECT_CONTEXT = 'FAILED'; throw error; }
-    const prs: PullRequest[] = []; const integrationLimitations: string[] = [];
+    const prs: PullRequest[] = []; const integrationLimitations: string[] = context.pullRequestReferences.filter(reference => !reference.url).map(reference => `Unresolved pull request reference (${reference.source}): ${reference.raw}`);
     for (const url of context.pullRequestUrls) try { prs.push(await this.sourceControl.getPullRequest(url)); } catch (error) { integrationLimitations.push(`Pull request unavailable: ${errorMessage(error)}`); }
-    stages.REVIEW_CODE = context.pullRequestUrls.length === 0 ? 'SKIPPED' : prs.length > 0 ? 'PASSED' : 'BLOCKED';
     let audit: StructuredAudit;
     try { audit = await this.ai.audit({ ticket: context.issue.key, context: sanitizeText(JSON.stringify({ issue: context.issue, parent: context.parent, comments: context.comments })), pullRequests: sanitizeData(prs) }); stages.PLAN_TESTS = 'PASSED'; } catch (error) { const limitation = `Structured AI audit unavailable: ${errorMessage(error)}`; audit = fallbackAudit(context.issue.key, limitation); integrationLimitations.push(limitation); stages.PLAN_TESTS = 'BLOCKED'; }
+    const codeWasAnalysed = prs.length > 0 && audit.sources.some(source => source.origin === 'GITHUB_PR' || source.origin === 'GITHUB_DIFF');
+    stages.REVIEW_CODE = context.pullRequestReferences.length === 0 ? 'SKIPPED' : codeWasAnalysed ? 'PASSED' : 'BLOCKED';
+    if (context.pullRequestReferences.length > 0 && !codeWasAnalysed) integrationLimitations.push('Pull request code was not confirmed as analysed by the validated audit.');
     let testResults: TestExecutionResult[] = [];
     if (executeTests) { try { testResults = await this.tests.execute({}); stages.EXECUTE_TESTS = testResults.some(result => result.status === 'FAILED') ? 'FAILED' : 'PASSED'; } catch (error) { integrationLimitations.push(`Test execution failed: ${errorMessage(error)}`); stages.EXECUTE_TESTS = 'FAILED'; } } else stages.EXECUTE_TESTS = 'SKIPPED';
     stages.GENERATE_REPORT = 'PASSED'; const executionStatus: ExecutionStatus = Object.values(stages).includes('FAILED') ? 'FAILED' : Object.values(stages).includes('BLOCKED') ? 'BLOCKED' : 'COMPLETED';
