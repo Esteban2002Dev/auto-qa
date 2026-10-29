@@ -56,7 +56,7 @@ When Jira sends `X-Atlassian-Webhook-Identifier`, Auto-QA stores it as the deliv
 5. Transition an AGSVK ticket assigned to the configured QA account into `Por revisar`.
 6. Verify that repeated delivery of the same request produces one stored event and one job.
 
-The SQLite database stores event IDs, QA cycle IDs, jobs, and report paths only. Report contents remain in `reports/`. `RUNNING` jobs are returned to `PENDING` after a receiver restart.
+The SQLite database stores event IDs, QA cycle IDs, jobs, execution IDs, and report/plan paths only. The structured plan remains in its existing JSON report under `reports/`; it is never duplicated in SQLite. Each job reserves a nullable Jira-comment ID for later publishing integration. `RUNNING` jobs are returned to `PENDING` after a receiver restart, while a failed job retains its plan path and can be retried through the history adapter.
 
 ## Modes
 
