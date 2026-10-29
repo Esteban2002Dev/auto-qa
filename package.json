@@ -9,7 +9,9 @@
     "test:e2e": "playwright test",
     "qa:ticket": "tsx src/presentation/cli/qa-ticket.ts",
     "qa:audit": "tsx src/presentation/cli/qa-audit.ts",
-    "qa:run": "tsx src/presentation/cli/qa-run.ts"
+    "qa:run": "tsx src/presentation/cli/qa-run.ts",
+    "qa:webhook": "tsx src/presentation/cli/qa-webhook.ts",
+    "qa:jira-publish-auth": "tsx src/presentation/cli/qa-jira-publish-auth.ts"
   },
   "repository": {
     "type": "git",

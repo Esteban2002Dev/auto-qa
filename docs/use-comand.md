@@ -88,6 +88,14 @@ npm run qa:run -- AGSVK-123
 
 Performs the same work as `qa:audit` and also runs Playwright. Use it only when the suite contains relevant tests and the target environment is configured. It never generates or executes arbitrary AI-produced code.
 
+## Start the Jira Webhook Receiver
+
+```bash
+npm run qa:webhook
+```
+
+The receiver exposes `GET /health` and `POST /webhooks/jira`. It is disabled by default and requires `QA_WEBHOOK_ENABLED=true` plus an HMAC or Automation bearer secret. See [Jira webhooks](jira-webhooks.md) for secure setup, debug mode, and manual validation.
+
 ## Execution Statuses
 
 | Status | Meaning |
