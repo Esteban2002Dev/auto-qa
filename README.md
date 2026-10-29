@@ -4,6 +4,8 @@ See the [project context and architecture](docs/project-context.md), [commands g
 
 Read the [environment configuration and credential migration guide](docs/environment-configuration.md) before configuring Jira or GitHub access.
 
+See the [Jira webhook guide](docs/jira-webhooks.md) before enabling automatic QA triggers.
+
 Auto-QA is an internal framework for gathering ticket context, reviewing pull requests in read-only mode, requesting local Claude Code audits, and storing structured QA results.
 
 ## Architecture
