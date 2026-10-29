@@ -26,7 +26,9 @@ The audit includes requirements, acceptance criteria, technical risks, findings,
 - Acceptance criteria use `MET`, `NOT_MET`, `PARTIALLY_MET`, `NOT_TESTED`, `BLOCKED`, or `UNKNOWN`.
 - Findings include severity, category, verification status, evidence, related requirements, and optional code location.
 - Verification status is `OBSERVED`, `REPORTED`, or `SUSPECTED`. Jira comments are always `REPORTED`, never `OBSERVED`, unless the current execution supplied independent evidence.
-- Test scenarios are proposals, not test results. Their execution status remains independent from `testResults`.
+- Test scenarios are reusable plans, not test results. Their IDs are unique within an execution and their execution status remains independent from `testResults`.
+- An executor may return a `testResults[].scenarioId` that matches a scenario ID; Auto-QA then updates only that scenario's status. Scenarios without a linked result remain `NOT_EXECUTED`.
+- If the ticket lacks material input, the audit records `InformaciÃ³n pendiente: ...` in `limitations`; requirements are never invented.
 
 Evidence origins include Jira descriptions/comments/epics, GitHub PRs/diffs, test results, screenshots, traces, network logs, and other traceable sources.
 
